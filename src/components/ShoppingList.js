@@ -8,36 +8,36 @@ function ShoppingList({ items, setItems }) {
   const [form, setFormData] = useState({
     id: uuid(),
     name: '',
-    category:'Produce',
-   })
-  const [displayItems, setDisplayItems] = useState(items)
+    category: 'Produce',
+  })
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [search, setSearch] = useState("");
 
-  console.log(items)
+  let displayItems = items.filter((item) => selectedCategory === "All" ? true : item.category === selectedCategory).filter((item) => item.name.toLowerCase().includes(search.toLowerCase()))
+
   function handleCategoryChange(event) {
-    let filteredItems = items.filter((item) => event.target.value === "All" ? true : item.category === event.target.value);
-    setDisplayItems(filteredItems);
+    setSelectedCategory(event.target.value);
   }
 
-  function handleSearchChange(event){
-    let filteredItems = items.filter((item) => item.name.toLowerCase().includes(event.target.value.toLowerCase()));
-    setDisplayItems(filteredItems);
+  function handleSearchChange(event) {
+    setSearch(event.target.value);
   }
 
-  function onItemFormSubmit(event){
+  function onItemFormSubmit(event) {
     event.preventDefault()
     setItems([...items, form])
     setFormData({
       id: uuid(),
       name: '',
-      category:'Produce',
-     })
+      category: 'Produce',
+    })
   }
 
 
   return (
     <div className="ShoppingList">
-      <ItemForm onItemFormSubmit={onItemFormSubmit} form={form} setFormData={setFormData}/>
-      <Filter onCategoryChange={handleCategoryChange} onSearchChange = {handleSearchChange} />
+      <ItemForm onItemFormSubmit={onItemFormSubmit} form={form} setFormData={setFormData} />
+      <Filter onCategoryChange={handleCategoryChange} onSearchChange={handleSearchChange} />
       <ul className="Items">
         {displayItems.map((item) => (
           <Item key={item.id} name={item.name} category={item.category} />
